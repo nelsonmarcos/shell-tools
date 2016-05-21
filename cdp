@@ -1,0 +1,17 @@
+# This function iterante an array entering 
+# the project directory and searchs for a
+# virtualenv with the project name
+
+cdp () {
+  project_dirs=( ~/projects ~/personal_projects )
+  for dir in ${project_dirs[@]};do
+     if [ -d $dir/$1 ];then
+       cd $dir/$1
+       if [ -f ~/.virtualenvs/$1/bin/activate ];then
+         source /Users/marcos/.virtualenvs/$1/bin/activate
+       else
+         source $(find . -name activate)
+       fi
+     fi
+  done
+}
