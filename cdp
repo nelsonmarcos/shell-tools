@@ -3,15 +3,19 @@
 # virtualenv with the project name
 
 cdp () {
-  project_dirs=( ~/projects ~/personal_projects )
+  project_dirs=(~/projetos)
   for dir in ${project_dirs[@]};do
-     if [ -d $dir/$1 ];then
-       cd $dir/$1
-       if [ -f ~/.virtualenvs/$1/bin/activate ];then
-         source /Users/marcos/.virtualenvs/$1/bin/activate
-       else
-         source $(find . -name activate)
-       fi
-     fi
+    if [ -d $dir/$1 ];then
+      cd $dir/$1
+      if pyenv virtualenvs|egrep " +$1 " > /dev/null;then
+        pyenv activate $1
+      else
+        local_virtualenv=$(find . -name activate|tail -1)
+        if [ -n "$local_virtualenv" ];then
+          source $local_virtualenv
+        fi
+      fi
+      return 1
+    fi
   done
 }
