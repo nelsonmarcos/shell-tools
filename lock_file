@@ -1,0 +1,28 @@
+# LockFile
+function create_lock {
+    basename=$(basename $0)
+    arqlock="/tmp/$basename.lock"
+    pid=$$
+    log Starting script
+    if [ -f $arqlock ]; then
+	if ps -p $(cat $arqlock) > /dev/null 2>&1; then
+	    log Lock file found. Exiting...
+            exit 0
+        else
+            log Lock file found but no process running. Removing lock file: $arqlock
+            rm $arqlock
+            log Creating lockfile: $arqlock
+            echo $pid > $arqlock
+        fi
+        else
+	    log Creating lock file: $arqlock
+            echo $pid > $arqlock
+        fi
+}
+
+function remove_lock {
+    log Removing lock file: $arqlock
+    rm $arqlock 2> /dev/null
+} 
+
+# EOF
